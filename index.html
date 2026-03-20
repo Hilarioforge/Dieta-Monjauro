@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cardápio">
+<meta name="theme-color" content="#1c1c1e">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Cardápio Thiago</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh;padding-bottom:50px;}
+header{background:#1c1c1e;color:#fff;padding:20px 16px 14px;position:sticky;top:0;z-index:99;}
+header h1{font-size:17px;font-weight:700;letter-spacing:-.3px;}
+header p{font-size:12px;color:#8e8e93;margin-top:2px;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px;background:#fff;border-bottom:1px solid #e5e5ea;font-size:12px;color:#3c3c43;}
+.leg{display:flex;align-items:center;gap:5px;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.section{padding:12px 12px 0;}
+.day-card{background:#fff;border-radius:13px;margin-bottom:10px;overflow:hidden;}
+.day-header{display:flex;align-items:center;gap:8px;padding:13px 14px;cursor:pointer;user-select:none;}
+.day-header:active{background:#f2f2f7;}
+.day-name{font-size:15px;font-weight:600;flex:1;min-width:0;}
+.badges{display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;}
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap;}
+.bj{background:#fff3cd;color:#856404;}
+.bn{background:#d1fae5;color:#065f46;}
+.bt{background:#dbeafe;color:#1e40af;}
+.chev{font-size:10px;color:#c7c7cc;flex-shrink:0;transition:transform .22s;}
+.chev.open{transform:rotate(180deg);}
+.day-meta{padding:0 14px 9px;font-size:11px;color:#8e8e93;border-bottom:1px solid #f2f2f7;}
+.day-body{display:none;padding:4px 14px 14px;}
+.day-body.open{display:block;}
+.jbanner{background:#fffbeb;border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:8px 11px;margin:10px 0 4px;font-size:12px;color:#92400e;line-height:1.55;}
+.meal{padding:10px 0;border-bottom:1px solid #f2f2f7;}
+.meal:last-child{border-bottom:none;padding-bottom:0;}
+.mtime{font-size:10px;color:#aeaeb2;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+.mtitle{font-size:14px;font-weight:600;margin-bottom:3px;}
+.mitems{font-size:13px;color:#3c3c43;line-height:1.65;}
+.macros{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+.mac{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;}
+.mp{background:#dbeafe;color:#1e40af;}
+.mc{background:#fef3c7;color:#92400e;}
+.mg{background:#d1fae5;color:#065f46;}
+.tips{background:#fff;border-radius:13px;margin:10px 12px 0;padding:15px;}
+.tips h2{font-size:14px;font-weight:700;margin-bottom:10px;}
+.tip{display:flex;gap:9px;margin-bottom:9px;font-size:13px;color:#3c3c43;line-height:1.55;}
+.tico{color:#f59e0b;font-size:15px;flex-shrink:0;}
+.supp{background:#1c1c1e;color:#fff;border-radius:13px;margin:10px 12px 0;padding:15px;}
+.supp h2{font-size:14px;font-weight:700;margin-bottom:10px;}
+.sitem{font-size:13px;color:#aeaeb2;line-height:1.55;padding:7px 0;border-bottom:1px solid #2c2c2e;}
+.sitem:last-child{border-bottom:none;}
+.sitem strong{color:#fff;}
+.footer{text-align:center;font-size:11px;color:#aeaeb2;margin-top:20px;padding:0 20px;line-height:1.6;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Cardápio Semanal — Thiago</h1>
+  <p>Mounjaro 2,5mg · Musculação · Déficit agressivo</p>
+</header>
+<div class="legend">
+  <div class="leg"><div class="dot" style="background:#f59e0b"></div>Jejum 16:8 (12h–20h)</div>
+  <div class="leg"><div class="dot" style="background:#10b981"></div>Alimentação normal</div>
+  <div class="leg"><div class="dot" style="background:#3b82f6"></div>Com treino</div>
+</div>
+<div class="section" id="days"></div>
+<div class="tips">
+  <h2>Regras gerais</h2>
+  <div class="tip"><span class="tico">●</span><span>Nos jejuns (Seg/Qua/Sex): só água, café preto ou chá sem açúcar até o meio-dia.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Proteína sempre primeiro no prato — preserva músculo no déficit.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Com o Mounjaro o apetite vai cair. Se não conseguir comer tudo, priorize a proteína e corte o carboidrato.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Pós-treino: coma dentro de 1h. Em dia de jejum + treino de manhã, quebre o jejum logo após a academia.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Água mínima: 2,5L por dia. Zero álcool.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Café preto sem açúcar liberado qualquer horário — melhora TGP e Gama-GT ao longo do tempo.</span></div>
+  <div class="tip"><span class="tico">●</span><span>Azeite extra-virgem no preparo todo dia — ajuda a elevar o HDL (que estava em 37, abaixo de 40).</span></div>
+  <div class="tip"><span class="tico">●</span><span>Salmão, atum ou tilápia pelo menos 3x por semana — impacto direto no colesterol e triglicérides.</span></div>
+</div>
+<div class="supp">
+  <h2>Suplementos — conversar com médico</h2>
+  <div class="sitem"><strong>Vitamina D3 + K2</strong> — 2.000 a 4.000 UI/dia. Seu nível estava em 21 ng/mL (limite inferior da normalidade).</div>
+  <div class="sitem"><strong>Ômega-3 (EPA+DHA)</strong> — 2 a 3g/dia. Reduz triglicérides, melhora HDL, anti-inflamatório hepático.</div>
+  <div class="sitem"><strong>Silimarina (cardo-mariano)</strong> — Suporte hepático. TGP 76 e Gama-GT 110 estavam elevados.</div>
+  <div class="sitem"><strong>Whey protein</strong> — Opcional nos dias de treino se não bater ~155g de proteína.</div>
+</div>
+<p class="footer">Orientação nutricional baseada nos seus exames de fev/2026.<br>Valide com nutricionista e médico, especialmente durante uso do Mounjaro.</p>
+<script>
+const D=[
+  {name:"Segunda-feira",tipo:"jejum",treino:true,kcal:1550,prot:155,meals:[
+    {time:"Jejum até 12h",title:"Café preto ou água com limão",items:"Café preto sem açúcar · Água · Chá sem açúcar",mac:[]},
+    {time:"12h — Almoço",title:"Frango + arroz integral + salada",items:"180g peito de frango grelhado · 4 col sopa arroz integral · Brócolis + cenoura refogados no azeite · Salada de folhas com azeite e limão",mac:["Prot ~52g","Carb ~55g","Gord ~12g"]},
+    {time:"15h30 — Lanche",title:"Iogurte grego + chia + fruta",items:"200g iogurte grego natural · 1 col sopa chia · 1 banana ou maçã",mac:["Prot ~20g","Carb ~28g","Gord ~6g"]},
+    {time:"19h30 — Jantar",title:"Atum + ovo + legumes",items:"1 lata atum ao natural (120g) · 2 ovos mexidos · Abobrinha + espinafre refogados · 1 col sopa azeite",mac:["Prot ~45g","Carb ~8g","Gord ~18g"]}
+  ]},
+  {name:"Terça-feira",tipo:"normal",treino:true,kcal:1750,prot:165,meals:[
+    {time:"7h30 — Café da manhã",title:"Ovos + aveia + fruta",items:"3 ovos mexidos com tomate · 40g aveia em flocos com canela · 1 laranja pequena · Café preto",mac:["Prot ~28g","Carb ~42g","Gord ~14g"]},
+    {time:"12h — Almoço",title:"Carne vermelha + feijão + salada",items:"180g patinho grelhado · 4 col sopa feijão carioca · 2 col sopa arroz integral · Couve refogada com alho e azeite · Salada crua",mac:["Prot ~52g","Carb ~50g","Gord ~13g"]},
+    {time:"15h30 — Lanche",title:"Queijo cottage + pepino",items:"150g queijo cottage · Pepino fatiado · Tomate cereja · Sal e orégano",mac:["Prot ~22g","Carb ~6g","Gord ~4g"]},
+    {time:"19h30 — Jantar",title:"Salmão + batata-doce + brócolis",items:"150g salmão grelhado · 150g batata-doce assada · Brócolis no vapor com azeite",mac:["Prot ~38g","Carb ~30g","Gord ~16g"]}
+  ]},
+  {name:"Quarta-feira",tipo:"jejum",treino:false,kcal:1400,prot:140,meals:[
+    {time:"Jejum até 12h",title:"Café preto ou água com limão",items:"Café preto sem açúcar · Água · Chá sem açúcar",mac:[]},
+    {time:"12h — Almoço",title:"Frango + lentilha + legumes",items:"180g frango grelhado · 5 col sopa lentilha cozida · Abobrinha + cenoura assadas · Azeite e limão",mac:["Prot ~52g","Carb ~48g","Gord ~11g"]},
+    {time:"15h30 — Lanche",title:"Iogurte grego + morango",items:"200g iogurte grego natural · 100g morango picado · Canela a gosto",mac:["Prot ~20g","Carb ~18g","Gord ~5g"]},
+    {time:"19h30 — Jantar",title:"Ovos + legumes + cottage",items:"3 ovos mexidos · 100g queijo cottage · Espinafre + tomate refogados · 1 col azeite",mac:["Prot ~38g","Carb ~8g","Gord ~20g"]}
+  ]},
+  {name:"Quinta-feira",tipo:"normal",treino:true,kcal:1750,prot:165,meals:[
+    {time:"7h30 — Café da manhã",title:"Omelete + aveia + café",items:"3 ovos em omelete com cottage e tomate · 40g aveia com canela e banana amassada · Café preto",mac:["Prot ~30g","Carb ~40g","Gord ~16g"]},
+    {time:"12h — Almoço",title:"Peixe + grão-de-bico + salada",items:"180g tilápia grelhada · 5 col sopa grão-de-bico cozido · Rúcula + tomate + pepino · Azeite e limão",mac:["Prot ~50g","Carb ~48g","Gord ~12g"]},
+    {time:"15h30 — Lanche",title:"Iogurte grego + maçã",items:"200g iogurte grego · 1 maçã média · Canela",mac:["Prot ~20g","Carb ~26g","Gord ~5g"]},
+    {time:"19h30 — Jantar",title:"Carne moída magra + abobrinha",items:"150g carne moída (patinho) refogada com alho e tomate · Abobrinha grelhada · Brócolis no vapor · 1 col azeite",mac:["Prot ~40g","Carb ~12g","Gord ~14g"]}
+  ]},
+  {name:"Sexta-feira",tipo:"jejum",treino:true,kcal:1550,prot:155,meals:[
+    {time:"Jejum até 12h",title:"Café preto ou água com limão",items:"Café preto sem açúcar · Água · Chá sem açúcar",mac:[]},
+    {time:"12h — Almoço",title:"Frango + arroz integral + feijão",items:"200g peito de frango grelhado · 3 col sopa arroz integral · 4 col sopa feijão · Couve refogada · Salada de folhas com azeite",mac:["Prot ~58g","Carb ~55g","Gord ~12g"]},
+    {time:"15h30 — Lanche",title:"Ovos cozidos + queijo cottage",items:"2 ovos cozidos · 100g cottage · Pepino e tomate cereja",mac:["Prot ~26g","Carb ~5g","Gord ~12g"]},
+    {time:"19h30 — Jantar",title:"Salmão + aspargo + ovo",items:"150g salmão assado · Aspargo grelhado no azeite · 1 ovo cozido",mac:["Prot ~45g","Carb ~6g","Gord ~18g"]}
+  ]},
+  {name:"Sábado",tipo:"normal",treino:false,kcal:1650,prot:150,meals:[
+    {time:"8h — Café da manhã",title:"Tapioca proteica + café",items:"2 tapiocas finas com 3 ovos mexidos e cottage · Tomate e orégano · Café preto",mac:["Prot ~32g","Carb ~38g","Gord ~14g"]},
+    {time:"12h30 — Almoço",title:"Churrasco magro + salada",items:"200g fraldinha ou alcatra (gordura aparada) · Salada grande: alface, rúcula, tomate, cebola roxa · Azeite e limão · 3 col sopa feijão",mac:["Prot ~52g","Carb ~30g","Gord ~16g"]},
+    {time:"16h — Lanche",title:"Fruta + iogurte",items:"200g iogurte grego · 1 banana ou maçã · Canela",mac:["Prot ~20g","Carb ~28g","Gord ~5g"]},
+    {time:"19h30 — Jantar",title:"Omelete + legumes salteados",items:"4 ovos em omelete com cottage e espinafre · Abobrinha + cenoura salteadas no azeite",mac:["Prot ~38g","Carb ~14g","Gord ~20g"]}
+  ]},
+  {name:"Domingo",tipo:"normal",treino:false,kcal:1700,prot:155,meals:[
+    {time:"8h30 — Café da manhã",title:"Panqueca proteica + café",items:"3 ovos + 40g aveia + 1 banana (bater e fritar sem óleo) · Café preto · Frutas vermelhas por cima",mac:["Prot ~26g","Carb ~45g","Gord ~12g"]},
+    {time:"13h — Almoço",title:"Frango assado + batata-doce + salada",items:"200g coxa de frango sem pele assada · 150g batata-doce com azeite e alecrim · Salada de rúcula, tomate e pepino",mac:["Prot ~48g","Carb ~40g","Gord ~14g"]},
+    {time:"16h — Lanche",title:"Ovos cozidos + fruta",items:"2 ovos cozidos · 1 maçã ou pera",mac:["Prot ~14g","Carb ~22g","Gord ~10g"]},
+    {time:"19h30 — Jantar",title:"Atum + legumes + ovo",items:"1 lata atum ao natural · 2 ovos mexidos · Brócolis + cenoura refogados · 1 col azeite",mac:["Prot ~46g","Carb ~14g","Gord ~14g"]}
+  ]}
+];
+
+const C=document.getElementById('days');
+D.forEach((d,i)=>{
+  const jb=d.tipo==='jejum'?`<div class="jbanner">Janela alimentar: <strong>12h às 20h.</strong> Antes das 12h apenas água, café preto ou chá sem açúcar.</div>`:'';
+  const ms=d.meals.map(m=>`
+    <div class="meal">
+      <div class="mtime">${m.time}</div>
+      <div class="mtitle">${m.title}</div>
+      <div class="mitems">${m.items}</div>
+      ${m.mac.length?`<div class="macros">${m.mac.map((x,j)=>`<span class="mac ${j===0?'mp':j===1?'mc':'mg'}">${x}</span>`).join('')}</div>`:''}
+    </div>`).join('');
+  const bj=d.tipo==='jejum'?'<span class="badge bj">Jejum 16:8</span>':'<span class="badge bn">Normal</span>';
+  const bt=d.treino?'<span class="badge bt">Treino</span>':'';
+  const el=document.createElement('div');
+  el.className='day-card';
+  el.innerHTML=`
+    <div class="day-header" onclick="tog(${i})">
+      <div class="day-name">${d.name}</div>
+      <div class="badges">${bj}${bt}</div>
+      <span class="chev" id="c${i}">&#9660;</span>
+    </div>
+    <div class="day-meta">~${d.kcal} kcal &nbsp;·&nbsp; ~${d.prot}g proteína</div>
+    <div class="day-body" id="b${i}">${jb}${ms}</div>`;
+  C.appendChild(el);
+});
+
+function tog(i){
+  const b=document.getElementById('b'+i),c=document.getElementById('c'+i),o=b.classList.contains('open');
+  b.classList.toggle('open',!o);c.classList.toggle('open',!o);
+}
+
+const map={0:6,1:0,2:1,3:2,4:3,5:4,6:5};
+tog(map[new Date().getDay()]);
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
